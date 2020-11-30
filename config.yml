@@ -1,0 +1,19 @@
+Server:
+    ip_address: 127.0.0.1
+    port: 10020
+    access_key_id: 12345678
+    access_key_secret: 12345678
+    bucket_name: your-bucket-name
+    # if remote_floder = '', the name of remote floder will be the same as local
+    remote_floder: /retinaface_data
+    # remote_floder: ''
+Local:
+    floder: /absolute/path/to/your/upload/floder
+    # you can change any name you like
+    save_name: multi_ftp_client.history
+Option:
+    start: true
+    resume: false
+    process_num: 32
+    # U are not supposed to change the number only if u know how to work with this parameter!
+    const_buffer_size: 81920
