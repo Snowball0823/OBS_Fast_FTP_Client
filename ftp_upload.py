@@ -117,7 +117,7 @@ def main(config):
         all_file_list = manager.list(files_list)
         # set progress bar
         weight = 1 if len(files_list) > 100 else 10
-        uploadFiles_widgets = ['Re-Creating DB:',
+        uploadFiles_widgets = ['Uploading Files:',
                             Percentage(), Bar('☆'), Timer(), ' ', ETA()]
         uploadFiles_bar = ProgressBar(
             widgets=uploadFiles_widgets, maxval=weight * len(files_list)).start()
