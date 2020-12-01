@@ -53,7 +53,7 @@ def multi_ftp_client(f_path, bar, weight, file_index, public_file_list, files_co
             count = files_count.value
             with open(f_path, 'a+') as f:
                 f.write(file_name+'\n')
-        bar.update(10*count)
+        bar.update(weight*count)
     sub_ftp.close()
 
 
