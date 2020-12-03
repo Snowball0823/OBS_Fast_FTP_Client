@@ -8,7 +8,7 @@ Server:
     remote_floder: /retinaface_data
     # remote_floder: ''
 Local:
-    floder: /absolute/path/to/your/upload/floder
+    upload_path: /absolute/path/to/your/upload/floder/or/file
     # you can change any name you like
     save_name: multi_ftp_client.history
 Option:

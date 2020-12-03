@@ -65,7 +65,8 @@ def main(config):
     ftp_pwd = server_config['access_key_secret']
     ftp_ip = server_config['ip_address']
     ftp_port = server_config['port']
-    local_floder = local_config['floder']
+    local_path = local_config['upload_path']
+    local_floder = local_path if os.path.isdir(local_path) else os.path.split(local_path)[0]
     execurate_file_path, _ = os.path.split(os.path.abspath( __file__))
     his_save_path = os.path.join(execurate_file_path, local_config['save_name'])
     _remote_floder = server_config['remote_floder']
@@ -105,7 +106,7 @@ def main(config):
     old_work_path = os.getcwd()
     os.chdir(local_floder)
     print('Loading transport file names...')
-    files_set = make_files_set('')
+    files_set = make_files_set('') if os.path.isdir(local_path) else {os.path.split(local_path)[-1]}
     files_list = list(files_set - set(history))
     if len(files_list) == 0:
         print('All files are uploaded!')
