@@ -1,9 +1,10 @@
 File:
     - '*.md'
     - '*.txt'
-    - '.ftphistory'
     - '*.jpg'
-Floder:
+    - '.ftphistory'
+    - 'environment.yml'
+Folder:
     - '.vscode'
     - 'widerface'
     - 'checkpoints'

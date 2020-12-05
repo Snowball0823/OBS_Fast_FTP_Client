@@ -4,11 +4,11 @@ Server:
     access_key_id: 12345678
     access_key_secret: 12345678
     bucket_name: your-bucket-name
-    # if remote_floder = '', the name of remote floder will be the same as local
-    remote_floder: /retinaface_data
-    # remote_floder: ''
+    # if remote_folder = '', the name of remote folder will be the same as local
+    remote_folder: /retinaface_data
+    # remote_folder: ''
 Local:
-    upload_path: /absolute/path/to/your/upload/floder/or/file
+    upload_path: /absolute/path/to/your/upload/folder/or/file
 Option:
     action: start # start/resume/update
     process_num: 32
