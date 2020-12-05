@@ -20,4 +20,6 @@ $ python3 ftp_upload.py
 + access_key_secret: get from HUAWEI cloud platform
 + bucket_name: your bucket name
 + remote_floder: default '' means the name is your upload floder name
+> # Ignore File
+Like the git ignore regulation, the "[.ftpignore](./.ftpignore)" is an template file to show how to write an ignore file.
 
