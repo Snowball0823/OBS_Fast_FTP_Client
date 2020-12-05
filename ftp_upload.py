@@ -1,34 +1,20 @@
 import os, sys
 import yaml
 import glob
-import atexit 
+import atexit
 from ftplib import FTP
 from progressbar import *
 from multiprocessing import Process, Manager, Value
 import multiprocessing
+from files_filter import FileFilter
 
 Config = "config.yml"
-
-def _get_current_file_set(files_set, floder):
-    current_level_files = set(glob.glob(os.path.join(floder, '*')))
-    for tmp_file in current_level_files:
-        if os.path.isdir(tmp_file):
-            _get_current_file_set(files_set, tmp_file)
-        else:
-            files_set.add(tmp_file)
-
 
 def _ftp_client_login(remote_floder='', user='', pwd='', ip='127.0.0.1', port='22', buffer_size=8192):
     sub_ftp = FTP()
     sub_ftp.connect(ip, port)
     sub_ftp.login(user, pwd)
     return sub_ftp, buffer_size, remote_floder
-
-
-def make_files_set(floder=''):
-    final_files_set = set()
-    _get_current_file_set(final_files_set, floder)
-    return final_files_set
 
 
 def multi_ftp_client(f_path, bar, weight, file_index, public_file_list, files_count, **kwargs):
@@ -68,11 +54,10 @@ def main(config):
     local_path = local_config['upload_path']
     local_floder = local_path if os.path.isdir(local_path) else os.path.split(local_path)[0]
     execurate_file_path, _ = os.path.split(os.path.abspath( __file__))
-    his_save_path = os.path.join(execurate_file_path, local_config['save_name'])
+    his_save_path = os.path.join(local_floder, '.ftphistory')
     _remote_floder = server_config['remote_floder']
     remote_floder = _remote_floder if _remote_floder != '' else os.path.join('/', os.path.split(local_floder)[-1])
-    start = option['start']
-    resume = option['resume']
+    action = option['action']
     process_num = option['process_num']
     buffer_size = option['const_buffer_size']
     # build user info
@@ -84,9 +69,12 @@ def main(config):
         buffer_size=buffer_size,
         remote_floder=remote_floder
     )
+    # change work path
+    old_work_path = os.getcwd()
+    os.chdir(local_floder)
     # build upload file list
-    if resume:
-        assert os.path.exists(his_save_path), 'Please check the hishtory file path!'
+    if action == 'resume':
+        assert os.path.exists(his_save_path), 'Please check the hishtory file path! Or just use \'start\' option!'
         print('-'*10+'Resume'+10*'-')
         print('Resume from '+his_save_path)
         print('Loading history now...')
@@ -94,20 +82,15 @@ def main(config):
         history = [i.strip('\n') for i in f.readlines()]
         f.close()
         print('-'*5+'Loading finish'+5*'-')
-        assert history[0] == local_floder, 'History not match! Please use \"start\" option!'
-        del(history[0])
-    else:
+    elif action == 'start':
         print('-'*10+'Start'+10*'-')
         print('Trans from '+local_floder)
         f = open(his_save_path, 'w+')
-        f.write(local_floder+'\n')
         history = []
         f.close()
-    old_work_path = os.getcwd()
-    os.chdir(local_floder)
     print('Loading transport file names...')
-    files_set = make_files_set('') if os.path.isdir(local_path) else {os.path.split(local_path)[-1]}
-    files_list = list(files_set - set(history))
+    files_filter = FileFilter(local_path)
+    files_list = files_filter.filter(history)
     if len(files_list) == 0:
         print('All files are uploaded!')
     else:
@@ -130,8 +113,9 @@ def main(config):
             tmp_process.start()
         for tmp_process in all_process:
             tmp_process.join()
-        uploadFiles_bar.finish()
-        os.chdir(old_work_path)
+    # change back
+    uploadFiles_bar.finish()
+    os.chdir(old_work_path)
     print(10*'-'+'Finshed'+'-'*10)
 
 
@@ -140,6 +124,7 @@ def main(config):
 if __name__ == "__main__":
     root_path, _ = os.path.split(os.path.abspath( __file__))
     conf = open(os.path.join(root_path, Config), 'r')
-    conf_dict = yaml.load(conf, Loader=yaml.FullLoader)
+    load_func = yaml.full_load if yaml.__version__ >= '5.1' else yaml.load
+    conf_dict = load_func(conf)
     conf.close()
     main(conf_dict)

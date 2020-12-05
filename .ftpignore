@@ -1,0 +1,13 @@
+File:
+    - '*.md'
+    - '*.txt'
+    - '.ftphistory'
+    - '*.jpg'
+Floder:
+    - '.vscode'
+    - 'widerface'
+    - 'checkpoints'
+    - 'logs'
+    - '__pycache__'
+    - 'results'
+    - 'widerface_txt'
