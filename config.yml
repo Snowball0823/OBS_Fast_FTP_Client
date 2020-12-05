@@ -9,11 +9,8 @@ Server:
     # remote_floder: ''
 Local:
     upload_path: /absolute/path/to/your/upload/floder/or/file
-    # you can change any name you like
-    save_name: multi_ftp_client.history
 Option:
-    start: true
-    resume: false
+    action: start # start/resume/update
     process_num: 32
     # U are not supposed to change the number only if u know how to work with this parameter!
     const_buffer_size: 81920
