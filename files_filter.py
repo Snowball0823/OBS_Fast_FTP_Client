@@ -59,15 +59,27 @@ class FileFilter(object):
             files_list = list(self.files_set - set(self.his_files))
         else:
             history_file_path = os.path.join(self.local_path, self.history_file_name)
-            raw_files_set = self.files_set - set(self.his_files)
+            useful_his_file = self.files_set & set(self.his_files)
+            # raw_files_set = self.files_set - set(self.his_files)
+            raw_files_set = self.files_set - useful_his_file
             self.md5_checker = Md5Checker(self.his_files, self.his_files_md5, buffer_size=self.buffer_size)
-            # update_history = self.md5_checker.update_files(history_file_path=history_file_path)
-            update_history = self.md5_checker.multi_process_update_files(history_file_path=history_file_path, process_num=process_num)
-            changed_file = set(self.his_files) - update_history
-            print('*'*5+'Changed Files'+'*'*5)
-            for i in changed_file:
-                print(i)
-            print('*'*5+'-------------'+'*'*5)
-            self.his_files = update_history
+            # nochange_history = self.md5_checker.update_files(files=useful_his_file, history_file_path=history_file_path)
+            nochange_history = self.md5_checker.multi_process_update_files(files=useful_his_file, history_file_path=history_file_path, process_num=process_num)
+            changed_file = set(useful_his_file) - nochange_history
+            if len(changed_file) != 0:
+                print('*'*5+'Changed Files'+'*'*5)
+                for i in changed_file:
+                    print(i)
+                print('*'*5+'-------------'+'*'*5)
+            else:
+                print('*'*5+'Nothing Changed!'+'*'*5)
+            if len(raw_files_set) != 0:
+                print('*'*5+'Added Files'+'*'*5)
+                for i in raw_files_set:
+                    print(i)
+                print('*'*5+'-----------'+'*'*5)
+            else:
+                print('*'*5+'Nothing Added!'+'*'*5)
+            self.his_files = nochange_history
             files_list = list(raw_files_set | changed_file)
         return files_list
