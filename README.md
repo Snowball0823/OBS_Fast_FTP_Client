@@ -1,17 +1,15 @@
 > # Intro
 OBS Fast FTP Client is a special FTP client for OBS FTP, which has uploading, downloading and other actions for remote HuaWei cloud server.
+The OBS Server is included in our codes.
 
-OBS Server Usage: [OBS Server](https://github.com/huaweicloud-obs/obsftp)
+OBS Server : [OBS Server](https://github.com/huaweicloud-obs/obsftp)
 ***
 > ## Description
 TO BE
 > # Useage
 Linux/Mac： Open terminal
 ``` shell
-$ screen -S Your_Name
-$ python2 FTPServerStart.py
-Ctrl+A+D
-$ python3 ftp_upload.py
+$ bash upload.sh
 ``` 
 > # Modify YAML
 + ip_address: 127.0.0.1 (default)
